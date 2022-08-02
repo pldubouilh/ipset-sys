@@ -1,0 +1,17 @@
+[package]
+name = "ipset-sys"
+build = "build.rs"
+version = "0.1.1"
+edition = "2021"
+license = "MIT"
+description = "ipset lib bindings"
+homepage = "https://github.com/pldubouilh/ipset-sys"
+documentation = "https://github.com/pldubouilh/ipset-sys"
+repository = "https://github.com/pldubouilh/ipset-sys"
+readme = "readme.md"
+
+[dependencies]
+anyhow = "1.0.44"
+
+[build-dependencies]
+bindgen = "0.53.1"
