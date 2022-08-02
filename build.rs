@@ -18,6 +18,7 @@ fn main() {
     // to bindgen, and lets you build up options for
     // the resulting bindings.
     let bindings = bindgen::Builder::default()
+        .whitelist_function("ipset_load_types|ipset_init|ipset_parse_line|ipset_fini")
         // The input header we would like to generate
         // bindings for.
         .header("wrapper.h")
