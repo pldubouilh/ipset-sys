@@ -1,5 +1,19 @@
-use anyhow::{bail, Result};
 use std::ffi::CString;
+
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+pub enum IpsetSysError {
+    #[error("can not init ipset")]
+    CantInit,
+    #[error("can not execute ipset command")]
+    CantExecuteCommand,
+    #[error("invalid command - can not parse to CString")]
+    InvalidCommand {
+        #[from]
+        source: std::ffi::NulError,
+    },
+}
 
 mod bindings;
 
@@ -8,7 +22,7 @@ pub struct IpsetSys {
 }
 
 impl IpsetSys {
-    pub fn init() -> Result<IpsetSys> {
+    pub fn init() -> Result<IpsetSys, IpsetSysError> {
         let is = unsafe {
             bindings::ipset_load_types();
             bindings::ipset_init()
@@ -17,18 +31,18 @@ impl IpsetSys {
         // todo: printf
 
         if is.is_null() {
-            bail!("can't init ipset");
+            return Err(IpsetSysError::CantInit);
         }
 
         Ok(IpsetSys { is })
     }
 
-    pub fn run(&mut self, cmd: &str) -> Result<()> {
-        let cline = CString::new(cmd.to_string()).unwrap();
-        let ret = unsafe { bindings::ipset_parse_line(self.is, cline.into_raw()) };
+    pub fn run(&mut self, cmd: &str) -> Result<(), IpsetSysError> {
+        let ccmd = CString::new(cmd.to_string())?;
+        let ret = unsafe { bindings::ipset_parse_line(self.is, ccmd.into_raw()) };
 
         if ret < 0 {
-            bail!("failed executing ipset command")
+            return Err(IpsetSysError::CantExecuteCommand);
         }
 
         Ok(())
@@ -46,10 +60,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn init() -> Result<()> {
-        let mut i = IpsetSys::init()?;
+    fn init() {
+        let mut i = IpsetSys::init().unwrap();
         let _ = i.run("destroy bob");
-        i.run("create bob hash:ip timeout 0")?;
-        Ok(())
+        i.run("create bob hash:ip timeout 0").unwrap();
     }
 }

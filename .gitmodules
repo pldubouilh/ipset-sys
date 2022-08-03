@@ -1,4 +1,0 @@
-[submodule "ipset"]
-	path = ipset
-	url = git://git.netfilter.org/ipset
-	branch = master
