@@ -1,15 +1,22 @@
+export PKG_CONFIG_PATH=./ipset/outlib/lib
+
 build::
 	cargo build
 
+build-deps::
+	mkdir -p outlib
+	cd ipset &&\
+		./autogen.sh &&\
+		./configure --prefix=/ --sbindir=/ --with-kmod=no &&\
+		make &&\
+		make DESTDIR=${PWD}/outlib install
+
 test::
-	rm -rf target/debug/build/ipset-s*
 	cargo test --no-run
-	rm target/debug/deps/ipset_sys-*.d
-	sudo target/debug/deps/ipset_sys-* -- tests
+	rm -rf target/debug/deps/ipset_sys-*.d
+	sudo LD_PRELOAD=outlib/lib/libipset.so target/debug/deps/ipset_sys-* -- tests
 
 publish:: lint
-	# special char in ipset tests makes it impossible to publish directly with cargo :)
-	rm -rf ipset/tests
 	cargo publish
 
 lint::

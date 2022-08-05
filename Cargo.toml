@@ -1,17 +1,18 @@
 [package]
 name = "ipset-sys"
 build = "build.rs"
-version = "0.1.2"
+version = "0.1.4"
 edition = "2021"
 license = "MIT"
 description = "ipset lib bindings"
-homepage = "https://github.com/pldubouilh/ipset-sys"
-documentation = "https://github.com/pldubouilh/ipset-sys"
+homepage = "https://crates.io/crates/ipset-sys"
+documentation = "https://docs.rs/crate/ipset-sys/latest"
 repository = "https://github.com/pldubouilh/ipset-sys"
 readme = "readme.md"
+exclude = ["./ipset/tests"]
 
 [dependencies]
-anyhow = "1.0.44"
+thiserror = "1.0"
 
 [build-dependencies]
 bindgen = "0.53.1"
