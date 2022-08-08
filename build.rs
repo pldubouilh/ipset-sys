@@ -10,7 +10,6 @@ fn main() {
 
     let bindings = bindgen::Builder::default()
         .header("./wrapper.h")
-        .whitelist_function("ipset_load_types|ipset_init|ipset_parse_line|ipset_fini")
         .generate()
         .expect("Unable to generate bindings");
 

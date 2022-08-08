@@ -1,10 +1,10 @@
 build::
 	cargo build
 
-test::
-	cargo test --no-run
-	rm target/debug/deps/ipset_sys-*.d
-	sudo target/debug/deps/ipset_sys-* -- tests
+run::
+	rm -rf target/debug/ipset-sys
+	cargo build
+	sudo target/debug/ipset-sys
 
 publish:: lint
 	cargo publish
@@ -12,3 +12,6 @@ publish:: lint
 lint::
 	cargo clippy --all
 	cargo fmt --all
+
+doc::
+	cargo doc --open
