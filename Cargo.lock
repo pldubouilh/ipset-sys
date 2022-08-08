@@ -156,6 +156,7 @@ name = "ipset-sys"
 version = "0.1.4"
 dependencies = [
  "bindgen",
+ "libc",
  "thiserror",
 ]
 
